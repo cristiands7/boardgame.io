@@ -284,6 +284,12 @@ export function CreateGameReducer({
           return WithError(state, ActionErrorType.InactivePlayer);
         }
 
+        // Check whether the event is allowed at this time.
+        if (!game.flow.isEventEnabled(action.payload.type)) {
+          error(`disallowed event: ${action.payload.type}`);
+          return WithError(state, ActionErrorType.ActionDisabled);
+        }
+
         // Execute plugins.
         state = plugins.Enhance(state, {
           game,

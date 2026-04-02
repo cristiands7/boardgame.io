@@ -871,6 +871,10 @@ export function Flow({
     return ctx.currentPlayer === playerID;
   }
 
+  function IsEventEnabled(eventName: string): boolean {
+    return enabledEventNames.includes(eventName);
+  }
+
   return {
     ctx: (numPlayers: number): Ctx => ({
       numPlayers,
@@ -888,6 +892,7 @@ export function Flow({
     eventHandlers,
     eventNames: Object.keys(eventHandlers),
     enabledEventNames,
+    isEventEnabled: IsEventEnabled,
     moveMap,
     moveNames: [...moveNames.values()],
     processMove: ProcessMove,
