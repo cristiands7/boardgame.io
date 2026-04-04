@@ -11,7 +11,13 @@ import {
   TransientHandlingMiddleware,
 } from '../core/reducer';
 import { ProcessGameConfig, IsLongFormMove } from '../core/game';
-import { UNDO, REDO, MAKE_MOVE } from '../core/action-types';
+import {
+  GAME_EVENT,
+  MAKE_MOVE,
+  PLUGIN,
+  REDO,
+  UNDO,
+} from '../core/action-types';
 import { createStore, applyMiddleware } from 'redux';
 import * as logging from '../core/logger';
 import type {
@@ -153,6 +159,18 @@ export class Master {
   ): Promise<void | { error: string }> {
     if (!credAction || !credAction.payload) {
       return { error: 'missing action or action payload' };
+    }
+
+    const allowedActionTypes = new Set<string>([
+      MAKE_MOVE,
+      GAME_EVENT,
+      UNDO,
+      REDO,
+      PLUGIN,
+    ]);
+
+    if (!allowedActionTypes.has(credAction.type)) {
+      return { error: 'invalid action type' };
     }
 
     let metadata: Server.MatchData | undefined;
